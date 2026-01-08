@@ -47,6 +47,9 @@ async def on_member_join(member):
 async def hello(ctx):
     await ctx.send(f"hello {ctx.author.mention}!")
 
+@bot.command()
+async def stupid(ctx):
+    await ctx.send(f"Stupid Message Spotted! Read <#1123759555663384617> First! ")
 
 
 
