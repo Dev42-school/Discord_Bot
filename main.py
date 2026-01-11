@@ -57,11 +57,10 @@ async def stupid(ctx):
 
 @bot.command()
 async def embed(ctx):
-    embed = discord.Embed(title="Server Timeline", description="Ideas for the server.\n test", color=0x00ff00)
-    embed.add_field(name="CivCraft 5.5", value="hi", inline=True)
-    embed.add_field(name="Field2", value="hi2", inline=True)
-    embed.add_field(name="Field3", value="hi2", inline=True)
-    embed.add_field(name="Field4", value="hi2", inline=False)
+    embed = discord.Embed(title="Server Timeline", description="Ideas for the server.", color=0x00ff00)
+    embed.add_field(name="CivCraft 5.5", value="For middle of febuery.", inline=False)
+    embed.add_field(name="SMP Server", value="For end of march.", inline=False)
+    embed.add_field(name="Network Server", value="At some point.", inline=False)
     await ctx.send(embed=embed)
 
 
