@@ -57,8 +57,7 @@ async def stupid(ctx):
 
 @bot.command()
 async def embed(ctx):
-    embed = discord.Embed(title="Example Embed", description="This is an example of a Discord embedded message." \\n
-    "345", color=0x00ff00)
+    embed = discord.Embed(title="Example Embed", description="This is an example of a Discord embedded message.\n test", color=0x00ff00)
     embed.add_field(name="Fiel1", value="hi", inline=True)
     embed.add_field(name="Field2", value="hi2", inline=False)
     await ctx.send(embed=embed)
@@ -66,5 +65,3 @@ async def embed(ctx):
 
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
-
-
