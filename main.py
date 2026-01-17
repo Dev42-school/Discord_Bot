@@ -37,12 +37,12 @@ async def on_member_join(member):
             message_to_reply = await channel.fetch_message(join_message_id)
             await asyncio.sleep(15)
             sent_message = await channel.send(f"Welcome To The CivCraft Server {member.mention}!", reference=message_to_reply, mention_author=False)
-            await asyncio.sleep(10)
+            await asyncio.sleep(30)
             await sent_message.delete()
         except discord.NotFound:
             await asyncio.sleep(15)
             sent_message = await channel.send(f"Welcome To The CivCraft Server {member.mention}!")
-            await asyncio.sleep(10)
+            await asyncio.sleep(30)
             await sent_message.delete()
 
 
