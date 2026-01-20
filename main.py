@@ -7,7 +7,7 @@ import asyncio
 
 load_dotenv()
 
-# these load the varables stored in the .env file
+# these load the variables stored in the .env file
 token = os.getenv('DISCORD_TOKEN')
 Welcome_channel_id = int(os.getenv('WELCOME_CHANNEL_ID'))
 join_message_id = int(os.getenv('JOIN_MESSAGE_ID'))
@@ -15,7 +15,7 @@ join_message_id = int(os.getenv('JOIN_MESSAGE_ID'))
 # this is for logs
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 
-# bot permition requests
+# bot permission requests
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -61,7 +61,7 @@ async def stupid(ctx):
 @bot.command()
 async def embed(ctx):
     embed = discord.Embed(title="Server Roadmap", description="Ideas for the server.", color=0x00ff00)
-    embed.add_field(name="CivCraft 5.5", value="For middle of febuery.", inline=False)
+    embed.add_field(name="CivCraft 5.5", value="For middle of february.", inline=False)
     embed.add_field(name="SMP Server", value="For end of march.", inline=False)
     embed.add_field(name="Network Server", value="At some point.", inline=False)
     await ctx.send(embed=embed)
@@ -71,13 +71,15 @@ async def embed(ctx):
 async def dice(ctx: commands.Context):
     await ctx.send("What value do you want to bet on?")
     message = await bot.wait_for("message", check=lambda msg: msg.author == ctx.author, timeout=60.0)
-    
     value_input = message.content
+    with open("test.txt", 'a') as txt:
+        print(value_input, file = txt)
 
 
 @client.command()
 async def dice1(ctx, value): # value variable will store user's input
     await ctx.send(f"You just bet {value} coins") # sends user's input
+    value = value
 
 
 
