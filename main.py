@@ -7,26 +7,29 @@ import asyncio
 
 load_dotenv()
 
+# these load the varables stored in the .env file
 token = os.getenv('DISCORD_TOKEN')
 Welcome_channel_id = int(os.getenv('WELCOME_CHANNEL_ID'))
 join_message_id = int(os.getenv('JOIN_MESSAGE_ID'))
 
+# this is for logs
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 
+# bot permition requests
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='>', intents=intents)
+bot = commands.Bot(command_prefix='>', intents=intents) # The discord bots prefix
+
+
+@bot.event # tells console the bot is ready
+async def on_ready():
+    print(f"bot ready, {bot.user.name}")
 
 @bot.event
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Activity(name=f"Over The CivCraft Server", type=discord.ActivityType.watching))
-
-@bot.event
-async def on_ready():
-    print(f"bot ready, {bot.user.name}")
-
 
 
 @bot.event
@@ -62,6 +65,25 @@ async def embed(ctx):
     embed.add_field(name="SMP Server", value="For end of march.", inline=False)
     embed.add_field(name="Network Server", value="At some point.", inline=False)
     await ctx.send(embed=embed)
+
+
+@client.command()
+async def dice(ctx: commands.Context):
+    await ctx.send("What value do you want to bet on?")
+    message = await bot.wait_for("message", check=lambda msg: msg.author == ctx.author, timeout=60.0)
+    
+    value_input = message.content
+
+
+@client.command()
+async def dice1(ctx, value): # value variable will store user's input
+    await ctx.send(f"You just bet {value} coins") # sends user's input
+
+
+
+
+
+
 
 
 
