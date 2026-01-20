@@ -26,10 +26,8 @@ bot = commands.Bot(command_prefix='>', intents=intents) # The discord bots prefi
 @bot.event # tells console the bot is ready
 async def on_ready():
     print(f"bot ready, {bot.user.name}")
+    await bot.change_presence(status=discord.Status.online, activity=discord.Activity(name=f"Watching Over The CivCraft Server", type=discord.ActivityType.watching))
 
-@bot.event
-async def on_ready():
-    await bot.change_presence(status=discord.Status.online, activity=discord.Activity(name=f"Over The CivCraft Server", type=discord.ActivityType.watching))
 
 
 @bot.event
