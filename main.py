@@ -25,7 +25,7 @@ bot = commands.Bot(command_prefix='>', intents=intents) # The discord bots prefi
 
 @bot.event # tells console the bot is ready
 async def on_ready():
-    print(f"bot ready, {bot.user.name}")
+    print(f"bot is ready, {bot.user.name}")
     await bot.change_presence(status=discord.Status.online, activity=discord.Activity(name=f"Watching Over The CivCraft Server", type=discord.ActivityType.watching))
 
 
@@ -45,6 +45,35 @@ async def on_member_join(member):
             sent_message = await channel.send(f"Welcome To The CivCraft Server {member.mention}!")
             await asyncio.sleep(120)
             await sent_message.delete()
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    # Check if the reaction is on the specified channel and message
+    if payload.channel_id == 1457516340431814880 and payload.message_id == 1458211664121041121:
+        # Check if the emoji is thumbs up
+        if str(payload.emoji) == '👍':
+            # Get the guild and member
+            guild = bot.get_guild(payload.guild_id)
+            if guild:
+                member = guild.get_member(payload.user_id)
+                if member:
+                    # Get the role
+                    role = guild.get_role(1123862354392776714)
+                    if role:
+                        try:
+                            # Add the role to the member
+                            await member.add_roles(role)
+                            print(f"Added role {role.name} to {member.name}")
+                        except discord.Forbidden:
+                            print("Bot does not have permission to add roles.")
+                        except Exception as e:
+                            print(f"Error adding role: {e}")
+                    else:
+                        print("Role not found.")
+                else:
+                    print("Member not found.")
+            else:
+                print("Guild not found.")
 
 
 
@@ -78,7 +107,6 @@ async def dice(ctx: commands.Context):
 async def dice1(ctx, value): # value variable will store user's input
     await ctx.send(f"You just bet {value} coins") # sends user's input
     value = value
-
 
 
 
