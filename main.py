@@ -138,6 +138,101 @@ async def dice1(ctx, value): # value variable will store user's input
     await ctx.send(f"You just bet {value} coins") # sends user's input
     value = value
 
+
+
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    # Check if the reaction is on the specified channel and message
+    if payload.channel_id == 997617979724402688 and payload.message_id == 1464701743442165811:
+        # Check if the emoji is island
+        if str(payload.emoji) == '🏝':
+            # Get the guild and member
+            guild = bot.get_guild(payload.guild_id)
+            if guild:
+                member = guild.get_member(payload.user_id)
+                if member:
+                        # Check if the user has already registered
+                        #    try:
+                        #        with open("discord_names.txt", 'r') as f:
+                        #            ids = f.read().splitlines()
+                        #        if str(ctx.author.id) in ids:
+                        #            dm_channel = await ctx.author.create_dm()
+                        #            embed = discord.Embed(title="Error", description="You have already registered for the whitelist.", color=0xff0000)
+                        #            await dm_channel.send(embed=embed)
+                        #            return
+                        #    except FileNotFoundError:
+                        #        pass  # File doesn't exist, so proceed with registration
+
+                            dm_channel = await ctx.author.create_dm()
+                            embed = discord.Embed(title="CivCraft Whitelist Application", description="What is your Minecraft Username?", color=0xff0000)
+                            await dm_channel.send(embed=embed)
+                            try:
+                                msg1 = await bot.wait_for("message", check=lambda m: m.author == ctx.author and m.channel == dm_channel, timeout=60.0)
+                                username = msg1.content
+                                run = True
+                                while run == True:
+                                    try:
+                                        embed = discord.Embed(title="CivCraft Whitelist Application", description="How old are you?", color=0xff0000)
+                                        await dm_channel.send(embed=embed)
+                                        msg2 = await bot.wait_for("message", check=lambda m: m.author == ctx.author and m.channel == dm_channel, timeout=60.0)
+                                        age = int(msg2.content)
+                                        run = False
+                                    except ValueError as e:
+                                        embed = discord.Embed(title="Invalid Input", description="That is not a number!", color=0xff0000)
+                                        await dm_channel.send(embed=embed)
+                                discord_id = ctx.author.id
+                                file_num = random.randint(1, 4)
+                                filename = f"all_file{file_num}.txt"
+                                with open(filename, 'a') as f:
+                                    f.write(f"<@{discord_id}>, {username}, {age}\n")
+                                filename = f"MC_file{file_num}.txt"
+                                with open(filename, 'a') as f:
+                                    f.write(f"{username}\n")
+                                filename = f"discord_names.txt"
+                                with open(filename, 'a') as f:
+                                    f.write(f"{discord_id}\n")
+                                embed = discord.Embed(title="CivCraft Whitelist Application Approved", description=f"You have been accepted into the CivCraft Minecraft Server!", color=0x00ff00)
+                                embed.add_field(name="", value=f"Your minecraft username is: **{username}** and your age is: **{age}** as your info", inline=False)
+                                await dm_channel.send(embed=embed)  
+                                try: # Update the registration count in the specified channel name
+                                    with open("discord_names.txt", 'r') as f:
+                                        count = len(f.readlines())
+                                    channel = bot.get_channel(Register_Num)
+                                    if channel:
+                                        await channel.edit(name=f"S6 Accepted People: {count}")
+                                except Exception as e:
+                                    print(f"Error updating registration count: {e}")
+                            except asyncio.TimeoutError:
+                                await dm_channel.send("You took too long to respond.")
+
+                else:
+                    print("Member not found.")
+            else:
+                print("Guild not found.")
+
+
+# Get the role
+#                    role = guild.get_role(1123862354392776714)
+#                    if role:
+#                        try:
+#                            # Add the role to the member
+#                            await member.add_roles(role)
+#                            print(f"Added role {role.name} to {member.name}")
+#                        except discord.Forbidden:
+#                            print("Bot does not have permission to add roles.")
+#                        except Exception as e:
+#                            print(f"Error adding role: {e}")
+#                    else:
+#                        print("Role not found.")
+
+
+
+
+
+
+
+
 @bot.command()
 async def register(ctx):
     # Check if the user has already registered
@@ -161,11 +256,20 @@ async def register(ctx):
         run = True
         while run == True:
             try:
-                embed = discord.Embed(title="CivCraft Whitelist Application", description="How old are you?", color=0xff0000)
+                embed = discord.Embed(title="CivCraft Whitelist Application", description="What is your age? Please be correct as we want to keep any children safe.", color=0xff0000)
                 await dm_channel.send(embed=embed)
                 msg2 = await bot.wait_for("message", check=lambda m: m.author == ctx.author and m.channel == dm_channel, timeout=60.0)
                 age = int(msg2.content)
-                run = False
+                if age >= 13 and age <= 45:
+                    run = False
+                else:
+                    discord_id = ctx.author.id
+                    with open('blacklist.txt', 'a') as f:
+                        f.write(f"<@{discord_id}>, {username}, {age}\n")
+                    embed = discord.Embed(title="CivCraft Whitelist Application", description="Thank you for your Application.", color=0x0000ff)
+                    await dm_channel.send(embed=embed)
+                    return None
+                
             except ValueError as e:
                 embed = discord.Embed(title="Invalid Input", description="That is not a number!", color=0xff0000)
                 await dm_channel.send(embed=embed)
@@ -188,7 +292,7 @@ async def register(ctx):
                 count = len(f.readlines())
             channel = bot.get_channel(Register_Num)
             if channel:
-                await channel.edit(name=f"Registrations: {count}")
+                await channel.edit(name=f"S6 Accepted People: {count}")
         except Exception as e:
             print(f"Error updating registration count: {e}")
     except asyncio.TimeoutError:
