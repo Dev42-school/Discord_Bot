@@ -12,6 +12,7 @@ load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 Welcome_channel_id = int(os.getenv('WELCOME_CHANNEL_ID'))
 join_message_id = int(os.getenv('JOIN_MESSAGE_ID'))
+Register_Num = int(os.getenv('REGISTER_NUM'))
 
 # this is for logs
 handler = logging.FileHandler(filename='bot_log.txt', encoding='utf-8', mode='w')
@@ -140,16 +141,16 @@ async def dice1(ctx, value): # value variable will store user's input
 @bot.command()
 async def register(ctx):
     # Check if the user has already registered
-    try:
-        with open("discord_names.txt", 'r') as f:
-            ids = f.read().splitlines()
-        if str(ctx.author.id) in ids:
-            dm_channel = await ctx.author.create_dm()
-            embed = discord.Embed(title="Error", description="You have already registered for the whitelist.", color=0xff0000)
-            await dm_channel.send(embed=embed)
-            return
-    except FileNotFoundError:
-        pass  # File doesn't exist, so proceed with registration
+#    try:
+#        with open("discord_names.txt", 'r') as f:
+#            ids = f.read().splitlines()
+#        if str(ctx.author.id) in ids:
+#            dm_channel = await ctx.author.create_dm()
+#            embed = discord.Embed(title="Error", description="You have already registered for the whitelist.", color=0xff0000)
+#            await dm_channel.send(embed=embed)
+#            return
+#    except FileNotFoundError:
+#        pass  # File doesn't exist, so proceed with registration
 
     dm_channel = await ctx.author.create_dm()
     embed = discord.Embed(title="CivCraft Whitelist Application", description="What is your Minecraft Username?", color=0xff0000)
@@ -181,7 +182,15 @@ async def register(ctx):
             f.write(f"{discord_id}\n")
         embed = discord.Embed(title="CivCraft Whitelist Application Approved", description=f"You have been accepted into the CivCraft Minecraft Server!", color=0x00ff00)
         embed.add_field(name="", value=f"Your minecraft username is: **{username}** and your age is: **{age}** as your info", inline=False)
-        await dm_channel.send(embed=embed)
+        await dm_channel.send(embed=embed)  
+        try: # Update the registration count in the specified channel name
+            with open("discord_names.txt", 'r') as f:
+                count = len(f.readlines())
+            channel = bot.get_channel(Register_Num)
+            if channel:
+                await channel.edit(name=f"Registrations: {count}")
+        except Exception as e:
+            print(f"Error updating registration count: {e}")
     except asyncio.TimeoutError:
         await dm_channel.send("You took too long to respond.")
 
